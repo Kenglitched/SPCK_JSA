@@ -1,0 +1,146 @@
+:root {
+    --colored-bg: #32CD32;
+    --colored-text: #ffffff;
+    --padding-section: 30px 100px;
+    --margin-section: 100px 0;
+}
+
+.colored {
+    background-color: var(--colored-bg);
+    color: var(--colored-text);
+
+    nav {
+        background-color: var(--colored-bg);
+
+        a,
+        button {
+            color: var(--colored-text);
+        }
+    }
+}
+
+#banner,
+#Seeds,
+#Diseases,
+#Planting,
+#Methods,
+footer {
+    padding: var(--padding-section);
+    margin: var(--margin-section);
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+#Planting h1,
+#Planting h1 {
+    text-align: center;
+    line-height: 80px;
+    padding: 30px;
+}
+
+/* banner */
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    nav {
+        width: 100%;
+    }
+}
+
+#banner {
+    min-height: 400px;
+    width: 100%;
+}
+
+#banner img {
+    width: 350px;
+    position: absolute;
+    rotate: 20deg;
+    border-radius: 30px;
+    left: 50%;
+}
+
+/* main */
+main {
+    --colored-bg: #1d85e6;
+    position: relative;
+    z-index: 1000;
+}
+
+/* services */
+#Seeds {
+
+    margin-top: 0;
+    padding-top: 100px;
+
+    i {
+        font-size: 60px;
+        color: var(--colored-bg);
+        margin-top: 30px;
+    }
+}
+
+img {
+    width: 350px;
+    border-radius: 30px;
+}
+
+
+
+/* comments */
+#Planting {
+    #carouselExampleAutoplaying {
+        width: 100%;
+        min-height: 500px;
+    }
+
+    .Planting {
+        font-size: 60px;
+        font-family: Impact, "Arial Narrow Bold", sans-serif, Helvetica, sans-serif;
+    }
+
+    .Planting-ava {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+
+}
+
+/* keyframe */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* responsive */
+@media only screen and (max-width: 1024px) {
+
+    #banner,
+    #Seeds,
+    #Diseases,
+    #Planting,
+    #Methods,
+    footer {
+        padding: 20px;
+        margin: 50px 0;
+    }
+
+    #banner img {
+        position: static;
+        rotate: 0deg;
+        margin-top: 30px;
+    }
+}
