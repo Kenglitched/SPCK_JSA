@@ -72,44 +72,24 @@ main {
     z-index: 1000;
 }
 
-/* services */
-#Seeds {
-
-    margin-top: 0;
-    padding-top: 100px;
-
-    i {
-        font-size: 60px;
-        color: var(--colored-bg);
-        margin-top: 30px;
-    }
-}
-
-img {
-    width: 350px;
-    border-radius: 30px;
-}
-
-
-
 /* comments */
-#Planting {
-    #carouselExampleAutoplaying {
-        width: 100%;
-        min-height: 500px;
-    }
+#Seeds {
+    #{
+ width: 100%;
+    min-height: 500px;
+}
 
-    .Planting {
-        font-size: 60px;
-        font-family: Impact, "Arial Narrow Bold", sans-serif, Helvetica, sans-serif;
-    }
+.Planting {
+    font-size: 60px;
+    font-family: Impact, "Arial Narrow Bold", sans-serif, Helvetica, sans-serif;
+}
 
-    .Planting-ava {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        object-position: center;
-    }
+.Planting-ava {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    object-position: center;
+}
 
 
 }
