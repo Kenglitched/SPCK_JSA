@@ -1,7 +1,7 @@
 // ===============================
 // EasyGardening API display script
 // ===============================
-const API_KEY = "sk-krr3690203ed0df5a13187"; // 👉 Điền key API của bạn tại đây
+const API_KEY = "sk-XhT6690213329282613191";
 
 const plantList = document.getElementById("plant_list");
 const diseaseList = document.getElementById("disease_list");
@@ -21,12 +21,13 @@ function renderCards(container, items, type = "plant") {
   }
 
   items.forEach((item) => {
+    console.log(item)
     const id = item.id;
     const name = item.common_name || item.name || "Unknown";
     const img =
       item.default_image?.original_url ||
-      item.image_url ||
-      "https://via.placeholder.com/300x200?text=No+Image";
+      item.images[0]?.original_url ||
+      "https://via.placeholder.com/300x200?text=None";
 
     let scientific = "";
     if (Array.isArray(item.scientific_name)) {
@@ -41,7 +42,11 @@ function renderCards(container, items, type = "plant") {
           <img src="${img}" class="bd-placeholder-img card-img-top" alt="${name}">
           <div class="card-body d-flex flex-column">
             <h6 class="card-title">${name}</h6>
-            ${scientific ? `<p class="card-text small text-muted">${scientific}</p>` : ""}
+            ${
+              scientific
+                ? `<p class="card-text small text-muted">${scientific}</p>`
+                : ""
+            }
             <button class="btn btn-sm btn-outline-primary mt-auto" 
               data-id="${id}" data-type="${type}">Xem chi tiết</button>
           </div>
@@ -66,7 +71,9 @@ function renderCards(container, items, type = "plant") {
 // ----------------------
 async function loadPlants() {
   try {
-    const res = await fetch(`https://perenual.com/api/species-list?key=${API_KEY}&page=1`);
+    const res = await fetch(
+      `https://perenual.com/api/species-list?key=${API_KEY}&page=1`
+    );
     const data = await res.json();
     renderCards(plantList, data.data, "plant");
   } catch (error) {
@@ -77,8 +84,11 @@ async function loadPlants() {
 
 async function loadDiseases() {
   try {
-    const res = await fetch(`https://perenual.com/api/pest-disease-list?key=${API_KEY}&page=1`);
+    const res = await fetch(
+      `https://perenual.com/api/pest-disease-list?key=${API_KEY}&page=1`
+    );
     const data = await res.json();
+
     renderCards(diseaseList, data.data, "disease");
   } catch (error) {
     console.error(error);
@@ -90,24 +100,34 @@ async function loadDiseases() {
 // Hiển thị chi tiết trong popup
 // ----------------------
 async function showDetail(id, type) {
+  console.log("Fetching details for:", id, type);
   modalTitle.textContent = "Đang tải...";
   detailContent.innerHTML = `<div class="spinner-border text-success" role="status"></div>`;
   modal.show();
 
   try {
-    let res, data;
+    let url;
     if (type === "plant") {
-      res = await fetch(`https://perenual.com/api/species/details/${id}?key=${API_KEY}`);
+      url = `https://perenual.com/api/v2/species/details/${id}?key=${API_KEY}`;
     } else {
-      res = await fetch(`https://perenual.com/api/pest-disease/details/${id}?key=${API_KEY}`);
+      // ✅ Dùng endpoint detail đúng
+      url = `https://perenual.com/api/pest-disease-list?id=${id}&key=${API_KEY}`;
     }
-    data = await res.json();
 
-    // Xử lý dữ liệu hiển thị
+    const res = await fetch(url);
+    // ✅ Kiểm tra định dạng JSON hợp lệ
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("API không trả về JSON — có thể sai API key hoặc ID");
+    }
+
+    const data = await res.json();
+    console.log(typeof data);
+
     const name = data.common_name || data.name || "Unknown";
     const img =
       data.default_image?.original_url ||
-      data.image_url ||
+      data.images[0]?.original_url ||
       "https://via.placeholder.com/400x250?text=No+Image";
 
     modalTitle.textContent = name;
@@ -118,16 +138,38 @@ async function showDetail(id, type) {
 
     if (type === "plant") {
       html += `
-        <p><strong>Scientific name:</strong> ${data.scientific_name?.join?.(", ") || data.scientific_name || "N/A"}</p>
+        <p><strong>Scientific name:</strong> ${
+          Array.isArray(data.scientific_name)
+            ? data.scientific_name.join(", ")
+            : data.scientific_name || "N/A"
+        }</p>
         <p><strong>Cycle:</strong> ${data.cycle || "N/A"}</p>
-        <p><strong>Watering:</strong> ${data.watering || "N/A"}</p>
-        <p><strong>Sunlight:</strong> ${Array.isArray(data.sunlight) ? data.sunlight.join(", ") : data.sunlight || "N/A"}</p>
+        <p><strong>Family:</strong> ${data.family || "N/A"}</p>
+        <p><strong>Description:</strong> ${data.description || "N/A"}</p>
       `;
     } else {
+      // ✅ Hiển thị danh sách description chi tiết
+      let desList = "";
+      if (Array.isArray(data.description)) {
+        data.description.forEach((desc) => {
+          desList += `
+            <div class="mb-2">
+              <p class="mb-1"><strong>${
+                desc.subtitle || "Thông tin"
+              }:</strong></p>
+              <p class="text-muted small">${desc.description || "N/A"}</p>
+            </div>
+          `;
+        });
+      } else {
+        desList = `<p>${data.description || "N/A"}</p>`;
+      }
+
       html += `
-        <p><strong>Scientific name:</strong> ${data.scientific_name || "N/A"}</p>
-        <p><strong>Symptoms:</strong> ${data.symptoms || "N/A"}</p>
-        <p><strong>Treatment:</strong> ${data.treatment || "N/A"}</p>
+        <p><strong>Scientific name:</strong> ${
+          data.scientific_name || "N/A"
+        }</p>
+        ${desList}
       `;
     }
 
@@ -135,14 +177,19 @@ async function showDetail(id, type) {
   } catch (error) {
     console.error(error);
     modalTitle.textContent = "Lỗi tải dữ liệu";
-    detailContent.innerHTML = `<p class="text-danger">Không thể tải chi tiết.</p>`;
+    detailContent.innerHTML = `
+      <div class="alert alert-danger">
+        ❌ Không thể tải chi tiết.<br>
+        Vui lòng kiểm tra API key hoặc thử lại sau.
+      </div>
+    `;
   }
 }
 
 // ----------------------
 // Load khi vào trang
 // ----------------------
-window.addEventListener("DOMContentLoaded", () => {
-  loadPlants();
-  loadDiseases();
+window.addEventListener("DOMContentLoaded", async () => {
+  await loadPlants();
+  await loadDiseases();
 });
