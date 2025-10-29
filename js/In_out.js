@@ -1,80 +1,56 @@
-const switch_signin_btn = document.getElementById("signin-btn");
-const switch_signup_btn = document.getElementById("signup-btn");
-const signin_form = document.getElementById("signin-form");
-const signup_form = document.getElementById("signup-form");
+const signinBtn = document.getElementById("signin-btn");
+const signupBtn = document.getElementById("signup-btn");
+const signinForm = document.getElementById("signin-form");
+const signupForm = document.getElementById("signup-form");
+const formTitle = document.getElementById("form-title");
 
-function signin() {
+// Switch forms
+signinBtn.onclick = () => {
+    signinForm.style.display = "block";
+    signupForm.style.display = "none";
+    formTitle.innerText = "Sign In";
+    signinBtn.classList.add("active");
+    signupBtn.classList.remove("active");
+};
+
+signupBtn.onclick = () => {
+    signinForm.style.display = "none";
+    signupForm.style.display = "block";
+    formTitle.innerText = "Sign Up";
+    signupBtn.classList.add("active");
+    signinBtn.classList.remove("active");
+};
+
+// Email check
+function isEmailValid(email) {
+    return email.includes("@") && email.includes(".");
+}
+
+// Sign In validation
+signinForm.onsubmit = (e) => {
+    e.preventDefault();
     const email = document.getElementById("signinEmail").value;
     const password = document.getElementById("signinPassword").value;
 
-    const userData = localStorage.getItem(email);
-    if (userData) {
-        const userObj = JSON.parse(userData);
-        if (userObj.password === password) {
-            alert("Đăng nhập thành công 🌿");
-            localStorage.setItem("currentUser", email);
-            location.href = "index.html"; // hoặc đổi sang trang chính
-        } else {
-            alert("Sai mật khẩu 🍂");
-            return;
-        }
-    } else {
-        alert("Email không tồn tại trong hệ thống 🌱");
-        return;
-    }
-}
+    if (!isEmailValid(email)) return alert("Invalid email!");
+    if (password.length < 6) return alert("Password must be 6+ characters!");
+    alert("Signed in successfully!");
+    signinForm.reset();
+};
 
-signin_form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    signin();
-});
-
-function validateSignUpData(username, email, password, confirmPassword) {
-    if (username.includes(" ")) {
-        alert("Tên người dùng không được chứa khoảng trắng 🍃");
-        return false;
-    }
-    if (confirmPassword !== password) {
-        alert("Mật khẩu và xác nhận không trùng khớp 🌾");
-        return false;
-    }
-    if (localStorage.getItem(email)) {
-        alert("Email đã được sử dụng 🌿");
-        return false;
-    }
-    return true;
-}
-
-function signup() {
+// Sign Up validation
+signupForm.onsubmit = (e) => {
+    e.preventDefault();
     const username = document.getElementById("signupUsername").value;
     const email = document.getElementById("signupEmail").value;
     const password = document.getElementById("signupPassword").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    const confirm = document.getElementById("confirmPassword").value;
 
-    const isValid = validateSignUpData(username, email, password, confirmPassword);
-    if (isValid) {
-        const newUser = { username, email, password };
-        localStorage.setItem(email, JSON.stringify(newUser));
-        alert("Đăng ký thành công 🌱");
-        switch_signin_btn.click();
-    }
-}
-
-signup_form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    signup();
-});
-
-switch_signin_btn.addEventListener("click", function () {
-    signin_form.style.display = "block";
-    signup_form.style.display = "none";
-    this.classList.add("active");
-    switch_signup_btn.classList.remove("active");
-});
-
-switch_signup_btn.addEventListener("click", function () {
-    signin_form.style.display = "none";
-    signup_form.style.display = "block";
-    this.classList.add("active");
-    switch_signin_btn.classList.remove("active");
-});
+    if (username.length < 3) return alert("Username too short!");
+    if (!isEmailValid(email)) return alert("Invalid email!");
+    if (password.length < 6) return alert("Password must be 6+ characters!");
+    if (password !== confirm) return alert("Passwords do not match!");
+    alert("Account created successfully!");
+    signupForm.reset();
+    signinBtn.click(); // Switch back to sign in
+};

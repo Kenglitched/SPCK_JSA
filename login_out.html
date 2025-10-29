@@ -1,55 +1,209 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng nhập / Đăng ký - Thiên nhiên 🌱</title>
-  <link rel="stylesheet" href="/css/In_out.css">
+  <title>Sign In / Sign Up</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #00b300, #66ff66);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .box {
+      background: #fff;
+      width: 360px;
+      padding: 35px 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 100, 0, 0.3);
+      transition: 0.3s;
+    }
+
+    .box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 100, 0, 0.35);
+    }
+
+    h2 {
+      text-align: center;
+      color: #006400;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    .toggle {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      background: #f0f0f0;
+      padding: 5px;
+      border-radius: 10px;
+    }
+
+    .toggle button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .toggle button.active {
+      background: #008000;
+      color: white;
+    }
+
+    form {
+      display: none;
+      transition: opacity 0.3s ease;
+    }
+
+    form.active {
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #00b300;
+      box-shadow: 0 0 5px rgba(0, 128, 0, 0.3);
+    }
+
+    button.submit {
+      background: #008000;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    button.submit:hover {
+      background: #006600;
+    }
+
+    /* Smooth form fade */
+    .fade {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    form.active.fade {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="switch-buttons">
-      <button id="signin-btn" class="active">Đăng nhập</button>
-      <button id="signup-btn">Đăng ký</button>
+
+  <div class="box">
+    <h2 id="form-title">Sign In</h2>
+    <div class="toggle">
+      <button id="signin-btn" class="active" type="button">Sign In</button>
+      <button id="signup-btn" type="button">Sign Up</button>
     </div>
 
-    <!-- Form Đăng nhập -->
-    <form id="signin-form" class="form-box">
-      <h2>🍃 Đăng nhập</h2>
-      <div class="input-group">
-        <label for="signinEmail">Email</label>
-        <input type="email" id="signinEmail" placeholder="Nhập email của bạn" required>
-      </div>
-      <div class="input-group">
-        <label for="signinPassword">Mật khẩu</label>
-        <input type="password" id="signinPassword" placeholder="Nhập mật khẩu" required>
-      </div>
-      <button type="submit" class="btn">Đăng nhập</button>
+    <form id="signin-form" class="active fade">
+      <input type="email" id="signinEmail" placeholder="Email" required>
+      <input type="password" id="signinPassword" placeholder="Password" required minlength="6">
+      <button class="submit" type="submit">Sign In</button>
     </form>
 
-    <!-- Form Đăng ký -->
-    <form id="signup-form" class="form-box" style="display: none;">
-      <h2>🌿 Đăng ký</h2>
-      <div class="input-group">
-        <label for="signupUsername">Tên người dùng</label>
-        <input type="text" id="signupUsername" placeholder="Nhập tên của bạn" required>
-      </div>
-      <div class="input-group">
-        <label for="signupEmail">Email</label>
-        <input type="email" id="signupEmail" placeholder="Nhập email của bạn" required>
-      </div>
-      <div class="input-group">
-        <label for="signupPassword">Mật khẩu</label>
-        <input type="password" id="signupPassword" placeholder="Tạo mật khẩu" required>
-      </div>
-      <div class="input-group">
-        <label for="confirmPassword">Nhập lại mật khẩu</label>
-        <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
-      </div>
-      <button type="submit" class="btn">Đăng ký</button>
+    <form id="signup-form" class="fade">
+      <input type="text" id="signupUsername" placeholder="Username" required minlength="3">
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="password" id="signupPassword" placeholder="Password" required minlength="6">
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required minlength="6">
+      <button class="submit" type="submit">Sign Up</button>
     </form>
   </div>
 
-  <script src="/js/In_out.js"></script>
+  <script>
+    const signinBtn = document.getElementById('signin-btn');
+    const signupBtn = document.getElementById('signup-btn');
+    const signinForm = document.getElementById('signin-form');
+    const signupForm = document.getElementById('signup-form');
+    const title = document.getElementById('form-title');
+
+    // Switch to Sign In
+    signinBtn.onclick = () => {
+      signinBtn.classList.add('active');
+      signupBtn.classList.remove('active');
+      signinForm.classList.add('active');
+      signupForm.classList.remove('active');
+      title.textContent = "Sign In";
+    };
+
+    // Switch to Sign Up
+    signupBtn.onclick = () => {
+      signupBtn.classList.add('active');
+      signinBtn.classList.remove('active');
+      signupForm.classList.add('active');
+      signinForm.classList.remove('active');
+      title.textContent = "Sign Up";
+    };
+
+    // Email validation
+    function validEmail(email) {
+      return email.includes("@") && email.includes(".");
+    }
+
+    // Sign In
+    signinForm.onsubmit = (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signinEmail").value;
+      const password = document.getElementById("signinPassword").value;
+      if (!validEmail(email)) return alert("Invalid email!");
+      if (password.length < 6) return alert("Password must be at least 6 characters!");
+      alert("✅ Signed in!");
+      signinForm.reset();
+    };
+
+    // Sign Up
+    signupForm.onsubmit = (e) => {
+      e.preventDefault();
+      const user = document.getElementById("signupUsername").value;
+      const email = document.getElementById("signupEmail").value;
+      const pass = document.getElementById("signupPassword").value;
+      const confirm = document.getElementById("confirmPassword").value;
+
+      if (user.length < 3) return alert("Username too short!");
+      if (!validEmail(email)) return alert("Invalid email!");
+      if (pass.length < 6) return alert("Password must be at least 6 characters!");
+      if (pass !== confirm) return alert("Passwords don't match!");
+      alert("🎉 Account created!");
+      signupForm.reset();
+      signinBtn.click(); // Switch to Sign In
+    };
+  </script>
+
 </body>
 </html>
